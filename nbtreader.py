@@ -1,25 +1,23 @@
 import nbt
 from collections import Counter
 
-nbtfile = nbt.nbt.NBTFile("ae2-basic-terminals.nbt","rb") 
-# print(nbtfile.keys())
-# print(nbtfile["blocks"])
-# print(type(nbtfile["blocks"]))
-# print(nbtfile.pretty_tree())
+nbtfile = nbt.nbt.NBTFile("ae2-basic-terminals.nbt","rb")
 
 recipeList = []
+blockList = {}
 
-for x in nbtfile["blocks"]:
-	# print(x["nbt"])
-	# print(x["nbt"]["id"])
-	recipeList.append(str(x["nbt"]["id"]))
-	# for y in x["nbt"]:
-	# 	print(y)
-	# 	pass
-	pass
+index = 0
+for blockType in nbtfile["palette"]:
+	blockList[index] = blockType["Name"]
+	index+=1
 
+for block in nbtfile["blocks"]:
+	if("nbt" in block.keys()):
+		recipeList.append(str(block["nbt"]["id"]))
 
-# print(recipeList)
+	if("state" in block.keys()):
+		blockType = block["state"].value
+		recipeList.append(str(blockList[blockType]))
 
 groupedList = Counter(recipeList)
 for x in groupedList.items():
